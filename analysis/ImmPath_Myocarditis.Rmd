@@ -1,0 +1,619 @@
+---
+title: "Myocarditis_Immpath"
+author: "HWC"
+date: "2025-07-25"
+output:
+  html_document:
+    keep_md: true
+    toc: true
+    self_contained: true
+  pdf_document:
+    toc: true
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+options(width = 100)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, dev = c("png", "pdf"))
+seed <- 1234
+```
+
+## load packages
+```{r load packages, warning=FALSE, include=FALSE}
+
+library(ExploreSCdataSeurat3)
+library(runSeurat3)
+library(Seurat)
+library(ggpubr)
+library(pheatmap)
+library(SingleCellExperiment)
+library(dplyr)
+library(tidyverse)
+library(viridis)
+library(muscat)
+library(circlize)
+library(destiny)
+library(scater)
+library(metap)
+library(multtest)
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(msigdbr)
+library(enrichplot)
+library(DOSE)
+library(grid)
+library(gridExtra)
+library(ggupset)
+library(VennDiagram)
+library(NCmisc)
+library(RColorBrewer)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(scRepertoire)
+library(writexl)
+
+
+```
+
+
+
+```{r load merged file}
+##load merged file 
+fileNam <- "/R/ImmPath_Myocarditis/data/Myocarditis_AMvsHealthy_merged_layers_filtered_25.05.25.rds"
+seuratM <- readRDS(fileNam)
+table(seuratM$dataset)
+table(seuratM$RNA_snn_res.0.25)
+table(seuratM$orig.ident)
+
+
+```
+
+
+
+```{r, echo = FALSE}
+seuratAM <- seuratM
+remove(seuratM)
+
+seuratAM$clusterName <- "clusterName"
+Idents(seuratAM) <- seuratAM$clusterName
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "0" )] <- "Fb1"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "1" )] <- "BEC1"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "2" )] <- "PeriFb1"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "3" )] <- "CM1"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "4" )] <- "TRM1"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "5" )] <- "Lymphocytes"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "6" )] <- "inflMph"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "7" )] <- "VSMC1"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "8" )] <- "BEC2"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "9" )] <- "CM3"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "10" )] <- "NC2"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "11" )] <- "NC1"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "12" )] <- "TRM3"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "13" )] <- "Fb2"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "14" )] <- "Int"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "15" )] <- "CM2"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "16" )] <- "Fb3"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "17" )] <- "VSMC2"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "18" )] <- "BEC3"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "19" )] <- "LECs"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "20" )] <- "TRM2"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "21" )] <- "PeriFb2"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "22" )] <- "Adipocytes"
+seuratAM$clusterName[which(seuratAM$RNA_snn_res.0.25 %in% "23" )] <- "Mast cells"
+
+## BEC3 high ICAM1, in NC2 high neurosynaptic monoaminergic activation
+
+colclusterName <- c("#f4a582", "#D53E4F", "#e34a33", "#FEE08B","#feb24c", "#fff7bc","#e5f5e0","#3288BD", "#1c9099", "#253494", "#a8ddb5", "#01665e", "#66C2A5","#c7eae5", "#67001f", "#355C7D","#54278f", "#ece2f0", "#fa9fb5","#a6bddb", "#BEAED4","#B45B5C","#fde0dd", "#dd1c77")
+
+#"#BEAED4"                   
+names(colclusterName) <- c("CM1", "CM2", "CM3", "Fb1","Fb2","Fb3", "Int", "PeriFb1", "PeriFb2", "VSMC1", "VSMC2","BEC1","BEC2", "BEC3", "LECs", "NC1", "NC2", "Adipocytes", "Mast cells", "TRM1", "TRM2", "TRM3", "inflMph","Lymphocytes")
+
+
+colpat_sub<- c("#dfc27d","#BE3144","#355C7D", "#779d8d")
+
+seuratAM$clusterName <- factor(seuratAM$clusterName, levels=c("CM1", "CM2", "CM3", "Fb1","Fb2","Fb3", "Int", "PeriFb1", "PeriFb2", "VSMC1", "VSMC2","BEC1","BEC2", "BEC3", "LECs", "NC1", "NC2", "Adipocytes", "Mast cells", "TRM1", "TRM2", "TRM3", "inflMph","Lymphocytes"))
+
+Idents(seuratAM) <- seuratAM$RNA_snn_res.0.25
+DimPlot(seuratAM, reduction = "umap", label = TRUE, repel = TRUE)
+
+Idents(seuratAM) <- seuratAM$clusterName
+DimPlot(seuratAM, reduction = "umap",label = TRUE, repel = TRUE, cols = colclusterName, raster = T)
+
+Idents(seuratAM) <- seuratAM$clusterName
+DimPlot(seuratAM, reduction = "umap",label = F, cols = colclusterName, raster = T)
+
+```
+
+## feature plots
+```{r}
+
+
+FeaturePlot(seuratAM, features = "ENSG00000125845.BMP2", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM, features = "ENSG00000125378.BMP4", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM, features = "ENSG00000166923.GREM1", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM, features = "ENSG00000180875.GREM2", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+
+FeaturePlot(seuratAM, features = "ENSG00000125845.BMP2", pt.size = 1, cols = c("lightgrey", "#BE3144"), order = TRUE)
+FeaturePlot(seuratAM, features = "ENSG00000125378.BMP4", pt.size = 1, cols = c("lightgrey", "#BE3144"), order = TRUE)
+FeaturePlot(seuratAM, features = "ENSG00000166923.GREM1", pt.size = 1, cols = c("lightgrey", "#BE3144"), order = TRUE)
+FeaturePlot(seuratAM, features = "ENSG00000180875.GREM2", pt.size = 1, cols = c("lightgrey", "#BE3144"), order = TRUE)
+
+
+
+```
+
+## Violin plots
+```{r}
+
+Idents(seuratAM) <- seuratAM$clusterName
+
+VlnPlot(seuratAM, features = "ENSG00000125845.BMP2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+VlnPlot(seuratAM, features = "ENSG00000125378.BMP4", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM, features = "ENSG00000166923.GREM1", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM, features = "ENSG00000180875.GREM2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM, features = "ENSG00000125845.BMP2", pt.size = 0.01, group.by ="clusterName")
+VlnPlot(seuratAM, features = "ENSG00000125378.BMP4", pt.size = 0.01, group.by ="clusterName")
+VlnPlot(seuratAM, features = "ENSG00000166923.GREM1", pt.size = 0.01, group.by ="clusterName")
+VlnPlot(seuratAM, features = "ENSG00000180875.GREM2", pt.size = 0.01, group.by ="clusterName")
+
+
+```
+
+
+```{r}
+
+Idents(seuratAM) <- seuratAM$pat_sub
+markerGenes <- FindAllMarkers(seuratAM, only.pos=T) %>%   
+dplyr::filter(p_val_adj < 0.1)
+
+
+
+
+```
+
+
+
+
+# Relative abundance per condition
+```{r, echo = FALSE}
+
+
+datList <- NULL
+for(con in unique(seuratAM$pat_sub)){
+  seuratAMSub <- subset(seuratAM, pat_sub==con)
+  print(dim(seuratAMSub))
+  dat_con <- as.data.frame(table(seuratAMSub$clusterName)) %>%
+  mutate(percent=Freq/ncol(seuratAMSub)) %>% mutate(diseaseCond=con)
+  datList[[con]] <- dat_con
+  
+}
+
+dat_all <- do.call("rbind", datList)
+
+order_patsub <- c("Healthy","AM")
+
+ggbarplot(dat_all, x = "diseaseCond", y = "percent", fill = "Var1", palette = colclusterName, legend = "right", legend.titel = "cluster", xlab = "condition", ylab = "frequency") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_x_discrete(limits = order_patsub)
+
+
+```
+
+
+# Relative abundance per sample
+```{r abundance per sample, echo = FALSE}
+
+datList <- NULL
+for(con in unique(seuratAM$sample)){
+  seuratAMSub <- subset(seuratAM, sample==con)
+  print(dim(seuratAMSub))
+  dat_con <- as.data.frame(table(seuratAMSub$clusterName)) %>%
+  mutate(percent=Freq/ncol(seuratAMSub)) %>% mutate(sample=con)
+  datList[[con]] <- dat_con
+}
+
+
+dat_all <- do.call("rbind", datList)
+
+head(dat_all)
+
+
+sample_order <- c("Healthy 01", "Healthy 02", "Healthy 03", "Healthy 04", "Healthy 05", "Healthy 06", "Healthy 07", "Healthy 08", "Healthy 09", "Healthy 10", "Healthy 11", "ZH-Immpath-AM-02", "ZH-Immpath-AM-10", "ZH-Immpath-AM-12", "ZH-Immpath-AM-18", "ZH-Immpath-AM-27", "ZH-Immpath-AM-29", "ZH-Immpath-AM-35", "ZH-Immpath-AM-37", "ZH-Immpath-AM-39", "ZH-Immpath-AM-47", "ZH-Immpath-AM-48", "ZH-Immpath-AM-54", "ZH-Immpath-AM-59",  "ZH-Immpath-AM-61", "ZH-Immpath-AM-63", "HeartRNAseq-AM-30", "HeartRNAseq-31", "Graz-AM-01", "Graz-AM-02", "Graz-AM-15", "Berlin-AM-694", "Berlin-AM-979", "Berlin-AM-1041","Berlin-AM-1235", "Berlin-AM-1383", "Berlin-AM-1537")
+
+
+dat_all$sample <- factor(dat_all$sample, levels = sample_order)
+
+
+ggbarplot(dat_all, x= "sample", y= "percent", fill = "Var1", legend = "right", legend.titel = "cluster", ylab = "frequency", palette = colclusterName )  + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+## Order and subset for lymphocytes --> descending
+dat_desc_lym <- dat_all
+dat_tc <- dat_all[dat_all$Var1 == "Lymphocytes", ]
+dat_desc_lym$sample <- factor(dat_desc_lym$sample, levels = dat_tc$sample[order(-dat_tc$percent)])
+
+dat_desc_lym <- dat_desc_lym %>%
+  dplyr::mutate(cluster = factor(Var1, levels = c(
+    "CM1", "CM2", "CM3", 
+    "Fb1", "Fb2", "Fb3", 
+    "Int", "PeriFb1", "PeriFb2", 
+    "VSMC1", "VSMC2",
+    "BEC1", "BEC2", "BEC3", 
+    "LECs", "NC1", "NC2", 
+    "Adipocytes", "Mast cells", 
+    "TRM1", "TRM2", "TRM3", 
+    "inflMph", "Lymphocytes"
+  )))
+
+
+ggbarplot(dat_desc_lym, x= "sample", y= "percent", fill = "cluster", legend = "right", legend.titel = "cluster", ylab = "frequency", palette = colclusterName )  + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+```
+
+
+### Total cell populations{.tabset}
+### T cell ratio vs BMP pathway genes 
+```{r T cell ratio vs BMP pathway genes}
+
+## Extract the BMP4 expression from the dataset
+b<-DotPlot(seuratAM,features = c("ENSG00000125378.BMP4", "ENSG00000125845.BMP2" , "ENSG00000166923.GREM1", "ENSG00000180875.GREM2"), group.by="patient")
+BMP4_path <- as.data.frame(b$data)
+colnames(BMP4_path)[colnames(BMP4_path) == "id"] <- "patient"
+
+
+## extract lymphocyte ratio from seurat object
+datList <- NULL
+for(con in unique(seuratAM$patient)){
+  seuratAMSub <- subset(seuratAM, patient==con)
+  print(dim(seuratAMSub))
+  dat_con <- as.data.frame(table(seuratAMSub$clusterName)) %>%
+  mutate(percent=Freq/ncol(seuratAMSub)) %>% mutate(sample=con)
+  datList[[con]] <- dat_con
+}
+
+dat_all_p <- do.call("rbind", datList)
+dat_tc <- NULL
+dat_tc <- subset.data.frame(dat_all_p, Var1 == "Lymphocytes") 
+colnames(dat_tc)[colnames(dat_tc) == "sample"] <- "patient"
+
+
+# Option 1: Separate avg.exp per gene into wide format
+BMP4_avgexp_wide <- BMP4_path %>%
+  dplyr::select(patient, features.plot, avg.exp) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp)
+
+
+# Option 2: Also pivot percent.exp if needed
+BMP4_avgexp_scaled <- BMP4_path %>%
+  dplyr::select(patient, features.plot, avg.exp.scaled) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp.scaled)
+
+BMP4_wide <- left_join(BMP4_avgexp_wide, BMP4_avgexp_scaled, by = "patient", suffix = c("_avg", "_avg.exp.scaled"))
+
+colnames(BMP4_wide) <- sapply(colnames(BMP4_wide), function(x) {
+  if (grepl("^ENSG[0-9]+\\.", x)) {
+    sub("^ENSG[0-9]+\\.", "", x)
+  } else {
+    x
+  }
+})
+
+## merge different data frames
+T_BMPpath <- merge(dat_tc, BMP4_wide, by = "patient")
+
+T_BMPpath <- T_BMPpath %>%
+  mutate(cond = ifelse(grepl("^healthy", patient, ignore.case = TRUE), "Healthy", "AM"))
+```
+
+
+#### T cell ratio vs BMP pathway genes_average expression
+```{r T cell ratio vs BMP pathway genes_average expression}
+# List of gene expression columns to plot as y
+geneset1 <- c( "BMP4_avg", "BMP2_avg", "GREM1_avg","GREM2_avg")
+
+for (gene in geneset1) {
+  p <- ggplot(T_BMPpath, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMPpath[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+```
+
+
+#### T cell ratio vs BMP pathway genes_average expression scaled
+```{r T cell ratio vs BMP pathway genes_average expression scaled}
+# List of gene expression columns to plot as y
+geneset2 <- c("BMP4_avg.exp.scaled", "BMP2_avg.exp.scaled", "GREM1_avg.exp.scaled", "GREM2_avg.exp.scaled")
+
+for (gene in geneset2) {
+  p <- ggplot(T_BMPpath, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMPpath[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+
+
+```
+
+
+
+### Stroma & Lymphocytes{.tabset}
+#### T cell ratio vs BMP pathway genes - Stroma & Lymphocytes
+```{r T cell ratio vs BMP pathway genes- Stroma & Lymphocytes}
+
+seuratAM_Stroma <- subset(seuratAM, clusterName %in% c("Fb1","Fb2","Fb3", "PeriFb1", "PeriFb2", "VSMC1", "VSMC2","BEC1","BEC2", "BEC3", "LECs", "Lymphocytes")) 
+Idents(seuratAM_Stroma) <- seuratAM_Stroma$clusterName
+DimPlot(seuratAM_Stroma, reduction = "umap",label = TRUE, repel = TRUE, cols = colclusterName, raster = T)
+
+
+## Extract the BMP4 expression from the dataset
+e<-DotPlot(seuratAM_Stroma,features = c("ENSG00000125378.BMP4", "ENSG00000125845.BMP2" , "ENSG00000166923.GREM1", "ENSG00000180875.GREM2"), group.by="patient")
+BMP_path_stroma <- as.data.frame(e$data)
+colnames(BMP_path_stroma)[colnames(BMP_path_stroma) == "id"] <- "patient"
+
+# Option 1: Separate avg.exp per gene into wide format
+BMP_avgexp_stroma <- BMP_path_stroma %>%
+  dplyr::select(patient, features.plot, avg.exp) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp)
+
+
+# Option 2: Also pivot percent.exp if needed
+BMP_avgexp_scaled_stroma <- BMP_path_stroma %>%
+  dplyr::select(patient, features.plot, avg.exp.scaled) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp.scaled)
+
+BMP_path_merStroma <- left_join(BMP_avgexp_stroma, BMP_avgexp_scaled_stroma, by = "patient", suffix = c("_avg", "_avg.exp.scaled"))
+
+colnames(BMP_path_merStroma) <- sapply(colnames(BMP_path_merStroma), function(x) {
+  if (grepl("^ENSG[0-9]+\\.", x)) {
+    sub("^ENSG[0-9]+\\.", "", x)
+  } else {
+    x
+  }
+})
+
+## merge different data frames
+T_BMP_path_merStroma<- merge(dat_tc, BMP_path_merStroma, by = "patient")
+
+T_BMP_path_merStroma <- T_BMP_path_merStroma %>%
+  mutate(cond = ifelse(grepl("^healthy", patient, ignore.case = TRUE), "Healthy", "AM"))
+```
+
+
+
+#### T cell ratio vs BMP pathway genes_average expression- Stroma & Lymphocytes
+```{r T cell ratio vs BMP pathway genes_average expression- Stroma & Lymphocytes}
+# List of gene expression columns to plot as y
+geneset1 <- c( "BMP4_avg", "BMP2_avg", "GREM1_avg","GREM2_avg")
+
+for (gene in geneset1) {
+  p <- ggplot(T_BMP_path_merStroma, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMP_path_merStroma[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+```
+
+#### T cell ratio vs BMP pathway genes_average expression scaled- Stroma & Lymphocytes
+```{r T cell ratio vs BMP pathway genes_average expression scaled- Stroma & Lymphocytes}
+# List of gene expression columns to plot as y
+geneset2 <- c("BMP4_avg.exp.scaled", "BMP2_avg.exp.scaled", "GREM1_avg.exp.scaled", "GREM2_avg.exp.scaled")
+
+for (gene in geneset2) {
+  p <- ggplot(T_BMP_path_merStroma, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMPpath[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+
+```
+
+
+### Fb & Lymphocytes{.tabset}
+#### T cell ratio vs BMP pathway genes - Fb & Lymphocytes
+```{r T cell ratio vs BMP pathway genes- Fb & Lymphocytes}
+
+
+seuratAM_FBLym <- subset(seuratAM, clusterName %in% c("Fb1","Fb2","Fb3", "PeriFb1", "PeriFb2", "VSMC1", "VSMC2","Lymphocytes")) 
+Idents(seuratAM_FBLym) <- seuratAM_FBLym$clusterName
+DimPlot(seuratAM_FBLym, reduction = "umap",label = TRUE, repel = TRUE, cols = colclusterName, raster = T)
+
+
+## Extract the BMP4 expression from the dataset
+d<-DotPlot(seuratAM_FBLym,features = c("ENSG00000125378.BMP4", "ENSG00000125845.BMP2" , "ENSG00000166923.GREM1", "ENSG00000180875.GREM2"), group.by="patient")
+BMP_path_FBLym <- as.data.frame(d$data)
+colnames(BMP_path_FBLym)[colnames(BMP_path_FBLym) == "id"] <- "patient"
+
+# Option 1: Separate avg.exp per gene into wide format
+BMP_avgexp_FBLym <- BMP_path_FBLym %>%
+  dplyr::select(patient, features.plot, avg.exp) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp)
+
+
+# Option 2: Also pivot percent.exp if needed
+BMP_avgexp_scaled_FBLym <- BMP_path_FBLym %>%
+  dplyr::select(patient, features.plot, avg.exp.scaled) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp.scaled)
+
+BMP_path_merFbLym <- left_join(BMP_avgexp_FBLym, BMP_avgexp_scaled_FBLym, by = "patient", suffix = c("_avg", "_avg.exp.scaled"))
+
+colnames(BMP_path_merFbLym) <- sapply(colnames(BMP_path_merFbLym), function(x) {
+  if (grepl("^ENSG[0-9]+\\.", x)) {
+    sub("^ENSG[0-9]+\\.", "", x)
+  } else {
+    x
+  }
+})
+
+## merge different data frames
+T_BMP_path_merFbLym<- merge(dat_tc, BMP_path_merFbLym, by = "patient")
+
+T_BMP_path_merFbLym <- T_BMP_path_merFbLym %>%
+  mutate(cond = ifelse(grepl("^healthy", patient, ignore.case = TRUE), "Healthy", "AM"))
+```
+
+
+
+#### T cell ratio vs BMP pathway genes_average expression- Fb & Lymphocytes
+```{r T cell ratio vs BMP pathway genes_average expression- Fb & Lymphocytes}
+# List of gene expression columns to plot as y
+geneset1 <- c( "BMP4_avg", "BMP2_avg", "GREM1_avg","GREM2_avg")
+
+for (gene in geneset1) {
+  p <- ggplot(T_BMP_path_merFbLym, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMPpath[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+```
+
+
+#### T cell ratio vs BMP pathway genes_average expression scaled- Fb & Lymphocytes
+```{r T cell ratio vs BMP pathway genes_average expression scaled- Fb & Lymphocytes}
+# List of gene expression columns to plot as y
+geneset2 <- c("BMP4_avg.exp.scaled", "BMP2_avg.exp.scaled", "GREM1_avg.exp.scaled", "GREM2_avg.exp.scaled")
+
+for (gene in geneset2) {
+  p <- ggplot(T_BMP_path_merFbLym, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMPpath[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+
+
+```
+
+
+
+### Fb only{.tabset}
+#### T cell ratio vs BMP pathway- Fb only
+```{r T cell ratio vs BMP pathway genes- Fb only}
+
+
+seuratAM_FB <- subset(seuratAM, clusterName %in% c("Fb1","Fb2","Fb3", "PeriFb1", "PeriFb2", "VSMC1", "VSMC2")) 
+Idents(seuratAM_FB) <- seuratAM_FB$clusterName
+DimPlot(seuratAM_FB, reduction = "umap",label = TRUE, repel = TRUE, cols = colclusterName, raster = T)
+
+
+## Extract the BMP4 expression from the dataset
+a<-DotPlot(seuratAM_FB,features = c("ENSG00000125378.BMP4", "ENSG00000125845.BMP2" , "ENSG00000166923.GREM1", "ENSG00000180875.GREM2"), group.by="patient")
+BMP_path_FB <- as.data.frame(a$data)
+colnames(BMP_path_FB)[colnames(BMP_path_FB) == "id"] <- "patient"
+
+# Option 1: Separate avg.exp per gene into wide format
+BMP_avgexp_FB <- BMP_path_FB %>%
+  dplyr::select(patient, features.plot, avg.exp) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp)
+
+
+# Option 2: Also pivot percent.exp if needed
+BMP_avgexp_scaled_FB <- BMP_path_FB %>%
+  dplyr::select(patient, features.plot, avg.exp.scaled) %>%
+  tidyr::pivot_wider(names_from = features.plot, values_from = avg.exp.scaled)
+
+BMP_path_merFb <- left_join(BMP_avgexp_FB, BMP_avgexp_scaled_FB, by = "patient", suffix = c("_avg", "_avg.exp.scaled"))
+
+colnames(BMP_path_merFb) <- sapply(colnames(BMP_path_merFb), function(x) {
+  if (grepl("^ENSG[0-9]+\\.", x)) {
+    sub("^ENSG[0-9]+\\.", "", x)
+  } else {
+    x
+  }
+})
+
+## merge different data frames
+T_BMP_path_merFb<- merge(dat_tc, BMP_path_merFb, by = "patient")
+
+T_BMP_path_merFb <- T_BMP_path_merFb %>%
+  mutate(cond = ifelse(grepl("^healthy", patient, ignore.case = TRUE), "Healthy", "AM"))
+```
+
+
+
+#### T cell ratio vs BMP pathway genes_average expression- Fb only
+```{r T cell ratio vs BMP pathway genes_average expression- Fb only}
+# List of gene expression columns to plot as y
+geneset1 <- c( "BMP4_avg", "BMP2_avg", "GREM1_avg","GREM2_avg")
+
+for (gene in geneset1) {
+  p <- ggplot(T_BMP_path_merFb, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMPpath[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+```
+
+
+#### T cell ratio vs BMP pathway genes_average expression scaled- Fb only
+```{r T cell ratio vs BMP pathway genes_average expression scaled- Fb only}
+# List of gene expression columns to plot as y
+geneset2 <- c("BMP4_avg.exp.scaled", "BMP2_avg.exp.scaled", "GREM1_avg.exp.scaled", "GREM2_avg.exp.scaled")
+
+for (gene in geneset2) {
+  p <- ggplot(T_BMP_path_merFb, aes_string(x = "percent", y = gene)) +  # aes_string for dynamic variable
+    geom_point(color = "orange") +
+    geom_smooth(method = "lm", color = "black", se = TRUE) +
+    stat_cor(method = "pearson", label.x = 0.05, label.y = max(T_BMPpath[[gene]], na.rm = TRUE)) +
+    ggtitle(paste("T cell total -", gene)) +
+    theme_classic()
+  
+  print(p)  # Show each plot
+}
+
+
+```
+
+
+
+
+## session info
+```{r date and session info}
+date()
+sessionInfo()
+```
