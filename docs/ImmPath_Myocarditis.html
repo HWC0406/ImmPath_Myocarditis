@@ -386,9 +386,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 2
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Immpath_Myocarditis/</code> <span
@@ -411,21 +411,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -542,15 +539,15 @@ data/Myocarditis_AMvsHealthy_merged_layers_filtered_25.05.25.rds
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomHWC0406ImmPathMyocarditistree618c6d42972c997a68284d024489aa0dd89fd96dtargetblank618c6d4a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomHWC0406ImmPathMyocarditistree05c47d91246ab83b83269a68f885ea80a6893d77targetblank05c47d9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/HWC0406/ImmPath_Myocarditis/tree/618c6d42972c997a68284d024489aa0dd89fd96d" target="_blank">618c6d4</a>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/tree/05c47d91246ab83b83269a68f885ea80a6893d77" target="_blank">05c47d9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomHWC0406ImmPathMyocarditistree618c6d42972c997a68284d024489aa0dd89fd96dtargetblank618c6d4a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomHWC0406ImmPathMyocarditistree05c47d91246ab83b83269a68f885ea80a6893d77targetblank05c47d9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -560,7 +557,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/HWC0406/ImmPath_Myocarditis/tree/618c6d42972c997a68284d024489aa0dd89fd96d" target="_blank">618c6d4</a>.
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/tree/05c47d91246ab83b83269a68f885ea80a6893d77" target="_blank">05c47d9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -577,9 +574,6 @@ were generated:
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   analysis/ImmPath_Myocarditis.Rmd
 
 </code></pre>
 <p>
@@ -624,6 +618,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/analysis/ImmPath_Myocarditis.Rmd" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+<td>
+20250728
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/HWC0406/ImmPath_Myocarditis/05c47d91246ab83b83269a68f885ea80a6893d77/docs/ImmPath_Myocarditis.html" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+<td>
+20250728
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2539,18 +2567,178 @@ VlnPlot(seuratAM_Stroma, features = &quot;ENSG00000125845.BMP2&quot;, pt.size = 
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Stroma%20&%20Lymphocytes_violin%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-1">
+Past versions of "BMP pathway expression- Stroma &amp;
+Lymphocytes_violin plot-1.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Stroma & Lymphocytes_violin plot-1.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_Stroma, features = &quot;ENSG00000125378.BMP4&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Stroma%20&%20Lymphocytes_violin%20plot-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-2">
+Past versions of "BMP pathway expression- Stroma &amp;
+Lymphocytes_violin plot-2.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-2"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Stroma & Lymphocytes_violin plot-2.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_Stroma, features = &quot;ENSG00000166923.GREM1&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Stroma%20&%20Lymphocytes_violin%20plot-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-3">
+Past versions of "BMP pathway expression- Stroma &amp;
+Lymphocytes_violin plot-3.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-3"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Stroma & Lymphocytes_violin plot-3.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_Stroma, features = &quot;ENSG00000180875.GREM2&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Stroma%20&%20Lymphocytes_violin%20plot-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-4">
+Past versions of "BMP pathway expression- Stroma &amp;
+Lymphocytes_violin plot-4.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Stroma-&amp;-Lymphocytes_violin-plot-4"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Stroma & Lymphocytes_violin plot-4.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="fb-lymphocytes" class="section level3 tabset">
@@ -3009,18 +3197,178 @@ VlnPlot(seuratAM_FBLym, features = &quot;ENSG00000125845.BMP2&quot;, pt.size = 0
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb%20&%20Lymphocytes_violin%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-1">
+Past versions of "BMP pathway expression- Fb &amp; Lymphocytes_violin
+plot-1.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb & Lymphocytes_violin plot-1.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_FBLym, features = &quot;ENSG00000125378.BMP4&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb%20&%20Lymphocytes_violin%20plot-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-2">
+Past versions of "BMP pathway expression- Fb &amp; Lymphocytes_violin
+plot-2.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-2"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb & Lymphocytes_violin plot-2.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_FBLym, features = &quot;ENSG00000166923.GREM1&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb%20&%20Lymphocytes_violin%20plot-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-3">
+Past versions of "BMP pathway expression- Fb &amp; Lymphocytes_violin
+plot-3.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-3"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb & Lymphocytes_violin plot-3.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_FBLym, features = &quot;ENSG00000180875.GREM2&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb%20&%20Lymphocytes_violin%20plot-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-4">
+Past versions of "BMP pathway expression- Fb &amp; Lymphocytes_violin
+plot-4.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-BMP-pathway-expression--Fb-&amp;-Lymphocytes_violin-plot-4"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb & Lymphocytes_violin plot-4.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="fb-only" class="section level3 tabset">
@@ -3473,24 +3821,176 @@ VlnPlot(seuratAM_FB, features = &quot;ENSG00000125845.BMP2&quot;, pt.size = 0.01
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb_violin%20plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-1">
+Past versions of "BMP pathway expression- Fb_violin plot-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb_violin plot-1.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_FB, features = &quot;ENSG00000125378.BMP4&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb_violin%20plot-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-2">
+Past versions of "BMP pathway expression- Fb_violin plot-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-2"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb_violin plot-2.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_FB, features = &quot;ENSG00000166923.GREM1&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb_violin%20plot-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-3">
+Past versions of "BMP pathway expression- Fb_violin plot-3.png"
+</button>
+</p>
+<div id="fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-3"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb_violin plot-3.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>VlnPlot(seuratAM_FB, features = &quot;ENSG00000180875.GREM2&quot;, pt.size = 0.01, group.by =&quot;pat_sub&quot;) +
   scale_fill_manual(values = c(&quot;#BE3144&quot;, &quot;#dfc27d&quot;))+
   stat_compare_means(method = &quot;wilcox.test&quot;, label = &quot;p.format&quot;)</code></pre>
 <p><img src="figure/ImmPath_Myocarditis.Rmd/BMP%20pathway%20expression-%20Fb_violin%20plot-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-4">
+Past versions of "BMP pathway expression- Fb_violin plot-4.png"
+</button>
+</p>
+<div id="fig-no-spaces-BMP-pathway-expression--Fb_violin-plot-4"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/HWC0406/ImmPath_Myocarditis/blob/05c47d91246ab83b83269a68f885ea80a6893d77/docs/figure/ImmPath_Myocarditis.Rmd/BMP pathway expression- Fb_violin plot-4.png" target="_blank">05c47d9</a>
+</td>
+<td>
+HWC0406
+</td>
+<td>
+2025-07-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="session-info" class="section level2">
 <h2>session info</h2>
 <pre class="r"><code>date()</code></pre>
-<pre><code>[1] &quot;Mon Jul 28 09:22:39 2025&quot;</code></pre>
+<pre><code>[1] &quot;Mon Jul 28 10:20:30 2025&quot;</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.4.1 (2024-06-14 ucrt)
 Platform: x86_64-w64-mingw32/x64
