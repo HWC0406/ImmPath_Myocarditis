@@ -270,7 +270,7 @@ ggbarplot(dat_desc_lym, x= "sample", y= "percent", fill = "cluster", legend = "r
 
 
 ### Total cell populations{.tabset}
-### T cell ratio vs BMP pathway genes 
+#### T cell ratio vs BMP pathway genes 
 ```{r T cell ratio vs BMP pathway genes}
 
 ## Extract the BMP4 expression from the dataset
@@ -285,7 +285,7 @@ for(con in unique(seuratAM$patient)){
   seuratAMSub <- subset(seuratAM, patient==con)
   print(dim(seuratAMSub))
   dat_con <- as.data.frame(table(seuratAMSub$clusterName)) %>%
-  mutate(percent=Freq/ncol(seuratAMSub)) %>% mutate(sample=con)
+  mutate(percent=Freq/ncol(seuratAMSub)) %>% mutate(patient=con)
   datList[[con]] <- dat_con
 }
 
@@ -442,6 +442,33 @@ for (gene in geneset2) {
 
 ```
 
+#### BMP pathway expression- Stroma & Lymphocytes_violin plot
+```{r BMP pathway expression- Stroma & Lymphocytes_violin plot}
+
+Idents(seuratAM_Stroma) <- seuratAM_Stroma$clusterName
+
+VlnPlot(seuratAM_Stroma, features = "ENSG00000125845.BMP2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+VlnPlot(seuratAM_Stroma, features = "ENSG00000125378.BMP4", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM_Stroma, features = "ENSG00000166923.GREM1", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM_Stroma, features = "ENSG00000180875.GREM2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+```
+
+
 
 ### Fb & Lymphocytes{.tabset}
 #### T cell ratio vs BMP pathway genes - Fb & Lymphocytes
@@ -525,6 +552,32 @@ for (gene in geneset2) {
 
 ```
 
+
+#### BMP pathway expression- Fb & Lymphocytes_violin plot
+```{r BMP pathway expression- Fb & Lymphocytes_violin plot}
+
+Idents(seuratAM_FBLym) <- seuratAM_FBLym$clusterName
+
+VlnPlot(seuratAM_FBLym, features = "ENSG00000125845.BMP2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+VlnPlot(seuratAM_FBLym, features = "ENSG00000125378.BMP4", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM_FBLym, features = "ENSG00000166923.GREM1", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM_FBLym, features = "ENSG00000180875.GREM2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+```
 
 
 ### Fb only{.tabset}
@@ -610,7 +663,31 @@ for (gene in geneset2) {
 ```
 
 
+#### BMP pathway expression- Fb_violin plot
+```{r BMP pathway expression- Fb_violin plot}
 
+Idents(seuratAM_FB) <- seuratAM_FB$clusterName
+
+VlnPlot(seuratAM_FB, features = "ENSG00000125845.BMP2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+VlnPlot(seuratAM_FB, features = "ENSG00000125378.BMP4", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM_FB, features = "ENSG00000166923.GREM1", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+VlnPlot(seuratAM_FB, features = "ENSG00000180875.GREM2", pt.size = 0.01, group.by ="pat_sub") +
+  scale_fill_manual(values = c("#BE3144", "#dfc27d"))+
+  stat_compare_means(method = "wilcox.test", label = "p.format")
+
+
+```
 
 ## session info
 ```{r date and session info}
