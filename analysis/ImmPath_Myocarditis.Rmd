@@ -176,6 +176,24 @@ VlnPlot(seuratAM, features = "ENSG00000180875.GREM2", pt.size = 0.01, group.by =
 
 ```
 
+```{r}
+
+selGene <- data.frame(gene=c("ENSG00000125845.BMP2","ENSG00000125378.BMP4","ENSG00000166923.GREM1","ENSG00000180875.GREM2"))
+ 
+
+Idents(seuratAM) <- seuratAM$pat_sub
+DotPlot(seuratAM, assay="RNA",features = selGene$gene, scale=F, cluster.idents =T, dot.min = 0, dot.scale = 8, scale.by ="size" )+
+  scale_color_viridis_c()+
+  coord_flip()+
+  theme(axis.text.x= element_text(angle=90, hjust=1))
+
+
+```
+
+
+
+
+
 
 ```{r}
 
@@ -405,6 +423,29 @@ T_BMP_path_merStroma <- T_BMP_path_merStroma %>%
   mutate(cond = ifelse(grepl("^healthy", patient, ignore.case = TRUE), "Healthy", "AM"))
 ```
 
+
+```{r}
+
+seuratAM_clean <- subset(seuratAM, clusterName %in% c("CM1", "CM2", "CM3", "Fb1","Fb2","Fb3", "PeriFb1", "PeriFb2", "VSMC1", "VSMC2","BEC1","BEC2", "BEC3", "LECs","TRM1", "TRM2", "TRM3", "inflMph","Lymphocytes")) 
+Idents(seuratAM_clean) <- seuratAM_clean$clusterName
+DimPlot(seuratAM_clean, reduction = "umap",label = TRUE, repel = TRUE, cols = colclusterName, raster = T)
+
+```
+
+
+
+
+
+```{r}
+
+Idents(seuratAM_Stroma) <- seuratAM_Stroma$pat_sub
+DotPlot(seuratAM_Stroma, assay="RNA",features = selGene$gene, scale=F, cluster.idents =T, dot.min = 0, dot.scale = 8, scale.by ="size" )+
+  scale_color_viridis_c()+
+  coord_flip()+
+  theme(axis.text.x= element_text(angle=90, hjust=1))
+
+
+```
 
 
 #### T cell ratio vs BMP pathway genes_average expression- Stroma & Lymphocytes

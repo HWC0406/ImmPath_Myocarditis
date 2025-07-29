@@ -1,0 +1,99 @@
+---
+title: "CD4+ T cell_Immpath"
+author: "HWC"
+date: "2025-07-29"
+output: html_document
+---
+
+## Subset only CD4+ T cell cluster
+```{r Subset only CD4+ T cell cluster}
+
+seuratAM_CD4 <- subset(seuratAM_Lymph, clusterName %in% c("CD4_T cell")) 
+Idents(seuratAM_CD4) <- seuratAM_CD4$clusterName
+DimPlot(seuratAM_CD4, reduction = "umap",label = TRUE, repel = TRUE, raster = T)
+
+
+
+#rerun seurat
+seuratAM_CD4 <- NormalizeData (object = seuratAM_CD4)
+seuratAM_CD4 <- FindVariableFeatures(object = seuratAM_CD4)
+seuratAM_CD4 <- ScaleData(object = seuratAM_CD4, verbose = TRUE)
+seuratAM_CD4 <- RunPCA(object=seuratAM_CD4, npcs = 30, verbose = FALSE)
+seuratAM_CD4 <- RunTSNE(object=seuratAM_CD4, reduction="pca", dims = 1:20)
+seuratAM_CD4 <- RunUMAP(object=seuratAM_CD4, reduction="pca", dims = 1:20)
+seuratAM_CD4 <- FindNeighbors(object = seuratAM_CD4, reduction = "pca", dims= 1:20)
+
+res <- c(0.25, 0.6, 0.8, 0.4, 0.1)
+for (i in 1:length(res)) {
+  seuratAM_CD4 <- FindClusters(object = seuratAM_CD4, resolution = res[i], random.seed = 1234)
+}
+
+Idents(seuratAM_CD4) <- seuratAM_CD4$RNA_snn_res.0.25
+DimPlot(seuratAM_CD4, reduction = "umap",label = TRUE, repel = TRUE, raster = T)
+```
+
+## Featureplot of markers_CD4+ T cell cluster
+```{r Featureplot of markers_CD4+ T cell cluster}
+FeaturePlot(seuratAM_CD4, features = "ENSG00000180875.GREM2", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_CD4, features = "ENSG00000143365.RORC", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_CD4, features = "ENSG00000162594.IL23R", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_CD4, features = "ENSG00000111796.KLRB1", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+
+```
+
+## DotPlot of markers_CD4+ T cell cluster
+```{r DotPlot of markers_CD4+ T cell cluster}
+selGene_CD4 <- data.frame(gene=c("ENSG00000125845.BMP2","ENSG00000125378.BMP4","ENSG00000166923.GREM1","ENSG00000180875.GREM2","ENSG00000143365.RORC","ENSG00000162594.IL23R"))
+
+Idents(seuratAM_CD4) <- seuratAM_CD4$RNA_snn_res.0.25
+DotPlot(seuratAM_CD4, assay="RNA",features = selGene_CD4$gene, scale=F, cluster.idents =T, dot.min = 0, dot.scale = 10, scale.by ="size" )+
+  scale_color_viridis_c()+
+  coord_flip()+
+  theme(axis.text.x= element_text(angle=90, hjust=1))
+```
+
+
+## Th17 signature_CD4+ T cell cluster
+```{r Th17 signature_CD4+ T cell cluster}
+
+
+Th17_signature <- c("ENSG00000143365.RORC", "ENSG00000162594.IL23R","ENSG00000112486.CCR6")
+
+seuratAM_CD4 <- AddModuleScore(
+  object = seuratAM_CD4,
+  features = list(Th17_signature),  # list of gene sets
+  name = "Th17_Score"               # prefix name for the score
+)
+FeaturePlot(
+  seuratAM_CD4,
+  features = "Th17_Score1",         # The name of the new module score column
+  reduction = "umap",
+  cols = c("lightgrey", "red"),
+  pt.size = 1, order = TRUE
+)
+
+VlnPlot(seuratAM_CD4, features = "Th17_Score1", group.by = "RNA_snn_res.0.25")
+
+
+
+```
+
+```{r, eval=FALSE, include=FALSE}
+Idents(seuratAM_CD4) <- seuratAM_CD4$RNA_snn_res.0.4
+markerGenes_CD4_0.4 <- FindAllMarkers(seuratAM_CD4, only.pos=T) %>%   
+dplyr::filter(p_val_adj < 0.1)
+
+```
+
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

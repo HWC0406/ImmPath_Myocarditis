@@ -1,0 +1,203 @@
+---
+title: "T cell_myocarditis"
+author: "HWC"
+date: "2025-07-29"
+output: 
+  html_document:
+    keep_md: true
+    toc: true
+    self_contained: true
+  pdf_document:
+    toc: true
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+options(width = 100)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, dev = c("png", "pdf"))
+seed <- 1234
+```
+
+## load packages
+```{r load packages, warning=FALSE, include=FALSE}
+
+library(ExploreSCdataSeurat3)
+library(runSeurat3)
+library(Seurat)
+library(ggpubr)
+library(pheatmap)
+library(SingleCellExperiment)
+library(dplyr)
+library(tidyverse)
+library(viridis)
+library(muscat)
+library(circlize)
+library(destiny)
+library(scater)
+library(metap)
+library(multtest)
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(msigdbr)
+library(enrichplot)
+library(DOSE)
+library(grid)
+library(gridExtra)
+library(ggupset)
+library(VennDiagram)
+library(NCmisc)
+library(RColorBrewer)
+library(magrittr)
+library(knitr)
+library(kableExtra)
+library(scRepertoire)
+library(writexl)
+
+
+```
+
+## load file
+```{r load merged file}
+##load merged file 
+fileNam <- "/R/ImmPath_Myocarditis/data/Myocarditis_AMvsHealthy_merged_layers_filtered_25.05.25.rds"
+seuratAM <- readRDS(fileNam)
+table(seuratAM$dataset)
+table(seuratAM$RNA_snn_res.0.25)
+table(seuratAM$orig.ident)
+
+
+
+```
+
+
+## Subset Lymphocytes cluster
+```{r Subset Lymphocytes cluster}
+
+seuratAM_Lymph <- subset(seuratAM, clusterName %in% c("Lymphocytes")) 
+Idents(seuratAM_Lymph) <- seuratAM_Lymph$clusterName
+DimPlot(seuratAM_Lymph, reduction = "umap",label = TRUE, repel = TRUE, raster = T)
+
+
+
+#rerun seurat
+seuratAM_Lymph <- NormalizeData (object = seuratAM_Lymph)
+seuratAM_Lymph <- FindVariableFeatures(object = seuratAM_Lymph)
+seuratAM_Lymph <- ScaleData(object = seuratAM_Lymph, verbose = TRUE)
+seuratAM_Lymph <- RunPCA(object=seuratAM_Lymph, npcs = 30, verbose = FALSE)
+seuratAM_Lymph <- RunTSNE(object=seuratAM_Lymph, reduction="pca", dims = 1:20)
+seuratAM_Lymph <- RunUMAP(object=seuratAM_Lymph, reduction="pca", dims = 1:20)
+seuratAM_Lymph <- FindNeighbors(object = seuratAM_Lymph, reduction = "pca", dims= 1:20)
+
+res <- c(0.25, 0.6, 0.8, 0.4, 0.1)
+for (i in 1:length(res)) {
+  seuratAM_Lymph <- FindClusters(object = seuratAM_Lymph, resolution = res[i], random.seed = 1234)
+}
+
+Idents(seuratAM_Lymph) <- seuratAM_Lymph$RNA_snn_res.0.25
+DimPlot(seuratAM_Lymph, reduction = "umap",label = TRUE, repel = TRUE, raster = T)
+
+
+
+
+```
+
+
+## Rename the clusters
+```{r Rename the clusters}
+seuratAM_Lymph$clusterName <- "clusterName"
+Idents(seuratAM_Lymph) <- seuratAM_Lymph$clusterName
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "0" )] <- "CD4_T cell"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "1" )] <- "CD8_T cell"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "2" )] <- "Proliferating cell"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "3" )] <- "PLZF_T cell"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "4" )] <- "NK/ILC1"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "5" )] <- "Treg"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "6" )] <- "Bcell_1"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "7" )] <- "Myeloid_1"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "8" )] <- "Bcell_2"
+seuratAM_Lymph$clusterName[which(seuratAM_Lymph$RNA_snn_res.0.25 %in% "9" )] <- "Myeloid_2"
+
+Idents(seuratAM_Lymph) <- seuratAM_Lymph$clusterName
+DimPlot(seuratAM_Lymph, reduction = "umap",label = TRUE, repel = TRUE, raster = T)
+
+```
+
+
+```{r, eval=FALSE , include=FALSE}
+Idents(seuratAM_Lymph) <- seuratAM_Lymph$RNA_snn_res.0.25
+markerGenes <- FindAllMarkers(seuratAM_Lymph, only.pos=T) %>%   
+dplyr::filter(p_val_adj < 0.1)
+
+```
+
+
+## DotPlot of markers_total lymphocytes
+```{r DotPlot of markers_total lymphocytes}
+
+selGene <- data.frame(gene=c("ENSG00000125845.BMP2","ENSG00000125378.BMP4","ENSG00000166923.GREM1","ENSG00000180875.GREM2", "ENSG00000143365.RORC","ENSG00000162594.IL23R","ENSG00000010610.CD4","ENSG00000153563.CD8A","ENSG00000198851.CD3E","ENSG00000049768.FOXP3","ENSG00000148773.MKI67"))
+
+
+Idents(seuratAM_Lymph) <- seuratAM_Lymph$clusterName
+DotPlot(seuratAM_Lymph, assay="RNA",features = selGene$gene, scale=F, cluster.idents =T, dot.min = 0, dot.scale = 8, scale.by ="size" )+
+  scale_color_viridis_c()+
+  coord_flip()+
+  theme(axis.text.x= element_text(angle=90, hjust=1))
+
+
+selGene_pat <- data.frame(gene=c("ENSG00000125845.BMP2","ENSG00000125378.BMP4","ENSG00000166923.GREM1","ENSG00000180875.GREM2", "ENSG00000143365.RORC","ENSG00000162594.IL23R"))
+
+
+Idents(seuratAM_Lymph) <- seuratAM_Lymph$clusterName
+DotPlot(seuratAM_Lymph, assay="RNA",features = selGene_pat$gene, scale=F, cluster.idents =T, dot.min = 0, dot.scale = 8, scale.by ="size" )+
+  scale_color_viridis_c()+
+  coord_flip()+
+  theme(axis.text.x= element_text(angle=90, hjust=1))
+
+
+
+```
+
+## FeaturePlot of markers__total lymphocytes
+```{r FeaturePlot of markers_total lymphocytes}
+
+FeaturePlot(seuratAM_Lymph, features = "ENSG00000010610.CD4", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_Lymph, features = "ENSG00000153563.CD8A", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_Lymph, features = "ENSG00000180875.GREM2", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_Lymph, features = "ENSG00000143365.RORC", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_Lymph, features = "ENSG00000112486.CCR6", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+FeaturePlot(seuratAM_Lymph, features = "ENSG00000162594.IL23R", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+
+```
+
+## FeaturePlot of Th17 signature_total lymphocytes
+```{r FeaturePlot of Th17 signature_total lymphocytes}
+
+Th17_signature <- c("ENSG00000143365.RORC", "ENSG00000162594.IL23R","ENSG00000112486.CCR6")
+seuratAM_Lymph <- AddModuleScore(
+  object = seuratAM_Lymph,
+  features = list(Th17_signature),  # list of gene sets
+  name = "Th17_Score"               # prefix name for the score
+)
+
+FeaturePlot(
+  seuratAM_Lymph,
+  features = "Th17_Score1",         # The name of the new module score column
+  reduction = "umap",
+  cols = c("lightgrey", "#BE3144"),
+  pt.size = 1, order = TRUE
+)
+
+
+FeaturePlot(seuratAM_Lymph, features = "ENSG00000180875.GREM2", pt.size = 1, cols = c("lightgrey", "#BE3144"))
+
+
+```
+
+
+
+## session info
+```{r date and session info}
+date()
+sessionInfo()
+```
